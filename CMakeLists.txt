@@ -10,14 +10,16 @@ if (WIN32)
   option(USE_OPENBLAS "Controls whether OpenBLAS will be used" ON)
 endif(WIN32)
 
-#LAPACK and BLAS
+#BLAS
 if (USE_OPENBLAS)
   find_package(OpenBLAS REQUIRED)
+  set(BLAS_LIBRARIES ${OPENBLAS_LIBRARIES})
 else()
   find_package(BLAS REQUIRED)
 endif(USE_OPENBLAS)
 find_package(RAVI REQUIRED)
 find_package(RaviLuaUTILS REQUIRED)
+find_package(RaviMatrix REQUIRED)
 find_package(GSL REQUIRED)
 
 message( STATUS "BLAS_LIBRARIES        : " ${BLAS_LIBRARIES} )
@@ -90,19 +92,17 @@ add_definitions(-DLUA_COMPAT_MODULE)
 include_directories("${PROJECT_SOURCE_DIR}/include")
 include_directories("${LUA_INCLUDE_DIRS}")
 include_directories("${RAVILUAUTILS_INCLUDE_DIRS}")
+include_directories("${RAVIMATRIX_INCLUDE_DIRS}")
 include_directories("${GSL_INCLUDE_DIRS}")
 if (APPLE)
   include_directories("/System/Library/Frameworks")
 endif()
 if (WIN32)
-  if (USE_OPENBLAS)
-    include_directories("${OPENBLAS_INCLUDE_DIRS}")
-    set(LAPACK_LIBRARIES "${OPENBLAS_LIBRARIES}")
-  else()
-    set(LAPACK_LIBRARIES "libgslcblas.lib")
+  if (NOT USE_OPENBLAS)
+    set(BLAS_LIBRARIES "libgslcblas.lib")
   endif()
 elseif(APPLE)
-else()
+else()                   
 endif()
 link_directories("${CMAKE_INSTALL_PREFIX}/bin")
 
@@ -122,8 +122,8 @@ add_library(ravigsl SHARED
 # appropriate export declarations can be set 
 set_target_properties(ravigsl 
   PROPERTIES DEFINE_SYMBOL "RAVIGSL_IMPLEMENTATION")
-target_link_libraries(ravigsl ${GSL_LIBRARIES} ${LAPACK_LIBRARIES} ${LUA_LIBRARIES} 
-  ${OPENBLAS_LIBRARIES} ${RAVILUAUTILS_LIBRARIES}) 
+target_link_libraries(ravigsl ${GSL_LIBRARIES} ${LUA_LIBRARIES} 
+  ${BLAS_LIBRARIES} ${RAVILUAUTILS_LIBRARIES} ${RAVIMATRIX_LIBRARIES}) 
 
 install(TARGETS ravigsl
         DESTINATION bin)
