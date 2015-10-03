@@ -29,17 +29,17 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <assert.h>
-#include <stdio.h>
+
 #include <gsl/gsl_sf_bessel.h>
 
-static int ravi_gsl_sf_bessel_J0(lua_State *L) {
+static int sf_bessel_J0(lua_State *L) {
   double x = luaL_checknumber(L, 1);
   double y = gsl_sf_bessel_J0(x);
   lua_pushnumber(L, y);
   return 1;
 }
 
-static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
+static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", sf_bessel_J0},
                                         {NULL, NULL}};
 
 int luaopen_ravigsl(lua_State *L) {
