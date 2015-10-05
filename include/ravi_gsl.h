@@ -24,7 +24,7 @@
 #ifndef RAVI_GSL_H_
 #define RAVI_GSL_H_
 
-#include <ravigsl-conf.h>
+#include <ravi_gsl_conf.h>
 
 #ifdef __cplusplus
 extern "C" {

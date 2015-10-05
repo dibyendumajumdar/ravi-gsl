@@ -1,7 +1,7 @@
 find_path(RAVIMATRIX_INCLUDE_DIR ravi_matrix.h
   PATHS
-  c:/ravi/include/ravimatrix
-  ~/ravi/include/ravimatrix
+  c:/ravi/include
+  ~/ravi/include
 )
 
 find_library(RAVIMATRIX_LIBRARY

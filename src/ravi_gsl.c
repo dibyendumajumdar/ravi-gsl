@@ -22,7 +22,7 @@
 ******************************************************************************/
 
 #include <ravi_gsl.h>
-#include <raviluautil.h>
+#include <ravi_lua_utils.h>
 
 #define RAVI_ENABLED 1
 

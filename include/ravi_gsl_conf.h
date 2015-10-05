@@ -1,5 +1,5 @@
-#ifndef _RAVIGSL_CONF_H
-#define _RAVIGSL_CONF_H
+#ifndef RAVI_GSL_CONF_H
+#define RAVI_GSL_CONF_H
 
 // This header file must be C compilable
 // No C++ artifacts allowed outside of #ifdef __cplusplus

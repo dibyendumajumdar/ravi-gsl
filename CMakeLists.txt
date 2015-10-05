@@ -128,4 +128,4 @@ target_link_libraries(ravigsl ${GSL_LIBRARIES} ${LUA_LIBRARIES}
 install(TARGETS ravigsl
         DESTINATION bin)
 install(FILES ${RAVIGSL_HEADERS} 
-        DESTINATION include/ravigsl)
+        DESTINATION include)
