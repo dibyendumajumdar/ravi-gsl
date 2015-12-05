@@ -104,7 +104,7 @@ if (WIN32)
 elseif(APPLE)
 else()                   
 endif()
-link_directories("${CMAKE_INSTALL_PREFIX}/bin")
+link_directories("${CMAKE_INSTALL_PREFIX}/lib")
 
 set (RAVIGSL_SRCS src/ravi_gsl.c)
 file(GLOB RAVIGSL_HEADERS "${PROJECT_SOURCE_DIR}/include/*.h")
@@ -125,7 +125,9 @@ set_target_properties(ravigsl
 target_link_libraries(ravigsl ${GSL_LIBRARIES} ${LUA_LIBRARIES} 
   ${BLAS_LIBRARIES} ${RAVILUAUTILS_LIBRARIES} ${RAVIMATRIX_LIBRARIES}) 
 
-install(TARGETS ravigsl
-        DESTINATION bin)
 install(FILES ${RAVIGSL_HEADERS} 
-        DESTINATION include)
+        DESTINATION include/ravi)
+install(TARGETS ravigsl
+        RUNTIME DESTINATION bin
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib)

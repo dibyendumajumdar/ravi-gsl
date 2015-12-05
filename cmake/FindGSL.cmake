@@ -7,7 +7,7 @@ find_path(GSL_INCLUDE_DIR gsl/gsl_version.h
 find_library(GSL_LIBRARY
   NAMES gsl libgsl
   PATHS
-  c:/ravi/bin
+  c:/ravi/lib
   /usr/lib
 )
 
