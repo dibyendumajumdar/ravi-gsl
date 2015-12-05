@@ -21,29 +21,17 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ******************************************************************************/
 
-#include <ravi_gsl.h>
-#include <ravi_lua_utils.h>
-#include <ravi_matrix.h>
-#include <ravi_matrixlib.h>
+#ifndef RAVI_GSL_INTERNAL_H
+#define RAVI_GSL_INTERNAL_H
 
-#include "ravi_gsl_internal.h"
 
-#define RAVI_ENABLED 1
+#define GSL_FUNC_D_D(name) \
+  static int ravi_##name(lua_State *L) { \
+    double x = luaL_checknumber(L, 1); \
+    double y = name(x); \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
 
-#include <stdbool.h>
-#include <stdio.h>
-#include <assert.h>
 
-#include <gsl/gsl_sf_bessel.h>
-
-GSL_FUNC_D_D(gsl_sf_bessel_J0)
-
-static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
-                                        {NULL, NULL}};
-
-int luaopen_ravigsl(lua_State *L) {
-  fprintf(stderr, "Initializing RaviGSL\n");
-  raviU_create_library(L, mylib);
-  fprintf(stdout, "RaviGSL initialized successfully\n");
-  return 1;
-}
+#endif
