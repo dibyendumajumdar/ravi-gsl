@@ -40,10 +40,18 @@
 GSL_FUNC_D_D(gsl_sf_bessel_J0)
 GSL_FUNC_D_MI(gsl_stats_mean)
 GSL_FUNC_D_MI_m(gsl_stats_variance, gsl_stats_variance_m)
+GSL_FUNC_D_MI_m(gsl_stats_sd, gsl_stats_sd_m)
+GSL_FUNC_D_MI_m(gsl_stats_tss, gsl_stats_tss_m)
+GSL_FUNC_D_MIN(gsl_stats_variance_with_fixed_mean)
+GSL_FUNC_D_MIN(gsl_stats_sd_with_fixed_mean)
 
 static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_mean", ravi_gsl_stats_mean},
                                         {"stats_variance", ravi_gsl_stats_variance},
+                                        {"stats_sd", ravi_gsl_stats_sd },
+                                        {"stats_tss", ravi_gsl_stats_tss },
+                                        {"stats_variance_with_fixed_mean", ravi_gsl_stats_variance_with_fixed_mean },
+                                        {"stats_sd_with_fixed_mean", ravi_gsl_stats_sd_with_fixed_mean },
                                         {NULL, NULL}};
 
 int luaopen_ravigsl(lua_State *L) {

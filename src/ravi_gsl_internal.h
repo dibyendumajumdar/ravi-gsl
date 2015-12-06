@@ -64,5 +64,18 @@
     return 1; \
   }
 
+// func(column[default 1] of a matrix, [m]) -> value 
+#define GSL_FUNC_D_MIN(name) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    double m = luaL_checknumber(L, 2); \
+    int col = (int) luaL_optinteger(L, 3, 1) - 1; \
+    luaL_argcheck(L, col >= 0 && col < v->n, 3, "invalid column"); \
+    double y = name(&v->data[col*v->m], 1, v->m, m); \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
+
 
 #endif

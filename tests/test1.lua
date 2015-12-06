@@ -15,6 +15,8 @@ y = gsl.stats_variance(data)
 assert(math.abs(y - 1.666666666) < 1e-5)
 y = gsl.stats_variance(data, 1, 3.0)
 assert(math.abs(y - 2.0) < 1e-5)
+y = gsl.stats_variance_with_fixed_mean(data, 3.0)
+assert(math.abs(y - 1.5) < 1e-5)
 
 local data: number[] = { 1, 2; 3.0, 4.0 }
 v = matrix.matrixR(2,2,data)
