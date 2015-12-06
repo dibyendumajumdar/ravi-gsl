@@ -54,6 +54,9 @@ GSL_FUNC_D_Mcol(gsl_stats_skew)
 GSL_FUNC_D_McolDD(gsl_stats_skew_m_sd)
 GSL_FUNC_D_Mcol(gsl_stats_kurtosis)
 GSL_FUNC_D_McolDD(gsl_stats_kurtosis_m_sd)
+GSL_ALTFUNC_D_McolD(gsl_stats_lag1_autocorrelation, gsl_stats_lag1_autocorrelation_m)
+GSL_FUNC_D_McolMcol(gsl_stats_covariance)
+GSL_FUNC_D_McolMcol(gsl_stats_correlation)
 
 static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_mean", ravi_gsl_stats_mean},
@@ -67,6 +70,9 @@ static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_skew_m_sd", ravi_gsl_stats_skew_m_sd},
                                         {"stats_kurtosis", ravi_gsl_stats_kurtosis},
                                         {"stats_skew_m_sd", ravi_gsl_stats_kurtosis_m_sd},
+                                        {"stats_lag1_autocorrelation", ravi_gsl_stats_lag1_autocorrelation},
+                                        {"stats_covariance", ravi_gsl_stats_covariance},
+                                        {"stats_correlation", ravi_gsl_stats_correlation},
                                         {NULL, NULL}};
 
 int luaopen_ravigsl(lua_State *L) {

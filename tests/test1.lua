@@ -42,6 +42,8 @@ local function stats_tests()
   local absdev: number
   local skew: number
   local kurt: number
+  local c: number
+  local r: number
 
   mean = gsl.stats_mean(rawa)
   expected = 0.0728
@@ -82,6 +84,15 @@ local function stats_tests()
   kurt = gsl.stats_kurtosis(rawa)
   expected = -1.38583851548909
   check(kurt, expected, "stats_kurtosis")
+
+  c = gsl.stats_covariance(rawa, 1, rawb, 1)
+  expected = -0.000139021538461539
+  check(c, expected, "stats_covariance")
+
+  r = gsl.stats_correlation(rawa, 1, rawb, 1)
+  expected = -0.112322712666074171
+  check(r, expected, "stats_correlation")
+
 end
 
 stats_tests()
