@@ -7,11 +7,10 @@ Pre-requisites
 --------------
 The following projects are pre-requisites:
 
- * Ravi Dist - https://github.com/dibyendumajumdar/ravi-dist
- * Ravi - https://github.com/dibyendumajumdar/ravi
- * Ravi Lua Utils - https://github.com/dibyendumajumdar/ravi-luautils
- * Ravi Matrix - https://github.com/dibyendumajumdar/ravi-matrix
-
+* Ravi Dist - https://github.com/dibyendumajumdar/ravi-dist
+* Ravi - https://github.com/dibyendumajumdar/ravi
+* Ravi Lua Utils - https://github.com/dibyendumajumdar/ravi-luautils
+* Ravi Matrix - https://github.com/dibyendumajumdar/ravi-matrix
 
 Building on Windows
 -------------------
@@ -34,3 +33,8 @@ Building on UNIX or MAC OSX
     cmake  -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$HOME/ravi ..
     make 
     make install
+
+License
+-------
+The GNU Scientific Library is licensed under GPLv3. Hence the same license applies to this project as
+a whole, although the implementation is under MIT license unless otherwise noted in the source file.
