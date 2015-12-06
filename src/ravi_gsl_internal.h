@@ -1,4 +1,5 @@
-/******************************************************************************
+/****************************
+**************************************************
 * Copyright (C) 2015 Dibyendu Majumdar
 *
 * Permission is hereby granted, free of charge, to any person obtaining
@@ -29,6 +30,36 @@
   static int ravi_##name(lua_State *L) { \
     double x = luaL_checknumber(L, 1); \
     double y = name(x); \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
+
+// func(column[default 1] of a matrix) -> value 
+#define GSL_FUNC_D_MI(name) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    int col = (int) luaL_optinteger(L, 2, 1) - 1; \
+    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    double y = name(&v->data[col*v->m], 1, v->m); \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
+
+// func(column[default 1] of a matrix, [m]) -> value 
+#define GSL_FUNC_D_MI_m(name, altname) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    int col = (int) luaL_optinteger(L, 2, 1) - 1; \
+    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    double y; \
+    if (lua_gettop(L) >= 3 && lua_isnumber(L, 3)) { \
+      y = altname(&v->data[col*v->m], 1, v->m, lua_tonumber(L,3)); \
+    } \
+    else { \
+      y = name(&v->data[col*v->m], 1, v->m); \
+    } \
     lua_pushnumber(L, y); \
     return 1; \
   }

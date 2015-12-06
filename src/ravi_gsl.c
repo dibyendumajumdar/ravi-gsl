@@ -35,10 +35,15 @@
 #include <assert.h>
 
 #include <gsl/gsl_sf_bessel.h>
+#include <gsl/gsl_statistics_double.h>
 
 GSL_FUNC_D_D(gsl_sf_bessel_J0)
+GSL_FUNC_D_MI(gsl_stats_mean)
+GSL_FUNC_D_MI_m(gsl_stats_variance, gsl_stats_variance_m)
 
 static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
+                                        {"stats_mean", ravi_gsl_stats_mean},
+                                        {"stats_variance", ravi_gsl_stats_variance},
                                         {NULL, NULL}};
 
 int luaopen_ravigsl(lua_State *L) {
