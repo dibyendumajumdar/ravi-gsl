@@ -37,14 +37,23 @@
 #include <gsl/gsl_sf_bessel.h>
 #include <gsl/gsl_statistics_double.h>
 
+// M - Matrix
+// D - Double
+// I - Integer
+// col - column (integer)
+
 GSL_FUNC_D_D(gsl_sf_bessel_J0)
-GSL_FUNC_D_MI(gsl_stats_mean)
-GSL_FUNC_D_MI_m(gsl_stats_variance, gsl_stats_variance_m)
-GSL_FUNC_D_MI_m(gsl_stats_sd, gsl_stats_sd_m)
-GSL_FUNC_D_MI_m(gsl_stats_tss, gsl_stats_tss_m)
-GSL_FUNC_D_MI_m(gsl_stats_absdev, gsl_stats_absdev_m)
-GSL_FUNC_D_MIN(gsl_stats_variance_with_fixed_mean)
-GSL_FUNC_D_MIN(gsl_stats_sd_with_fixed_mean)
+GSL_FUNC_D_Mcol(gsl_stats_mean)
+GSL_ALTFUNC_D_McolD(gsl_stats_variance, gsl_stats_variance_m)
+GSL_ALTFUNC_D_McolD(gsl_stats_sd, gsl_stats_sd_m)
+GSL_ALTFUNC_D_McolD(gsl_stats_tss, gsl_stats_tss_m)
+GSL_ALTFUNC_D_McolD(gsl_stats_absdev, gsl_stats_absdev_m)
+GSL_FUNC_D_McolD(gsl_stats_variance_with_fixed_mean)
+GSL_FUNC_D_McolD(gsl_stats_sd_with_fixed_mean)
+GSL_FUNC_D_Mcol(gsl_stats_skew)
+GSL_FUNC_D_McolDD(gsl_stats_skew_m_sd)
+GSL_FUNC_D_Mcol(gsl_stats_kurtosis)
+GSL_FUNC_D_McolDD(gsl_stats_kurtosis_m_sd)
 
 static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_mean", ravi_gsl_stats_mean},
@@ -54,6 +63,10 @@ static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_absdev", ravi_gsl_stats_absdev },
                                         {"stats_variance_with_fixed_mean", ravi_gsl_stats_variance_with_fixed_mean },
                                         {"stats_sd_with_fixed_mean", ravi_gsl_stats_sd_with_fixed_mean },
+                                        {"stats_skew", ravi_gsl_stats_skew},
+                                        {"stats_skew_m_sd", ravi_gsl_stats_skew_m_sd},
+                                        {"stats_kurtosis", ravi_gsl_stats_kurtosis},
+                                        {"stats_skew_m_sd", ravi_gsl_stats_kurtosis_m_sd},
                                         {NULL, NULL}};
 
 int luaopen_ravigsl(lua_State *L) {

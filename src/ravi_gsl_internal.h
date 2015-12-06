@@ -25,7 +25,12 @@
 #ifndef RAVI_GSL_INTERNAL_H
 #define RAVI_GSL_INTERNAL_H
 
+// D - Double
+// I - Integer
+// M - Matrix
+// col - Matrix column
 
+// name(D) -> D
 #define GSL_FUNC_D_D(name) \
   static int ravi_##name(lua_State *L) { \
     double x = luaL_checknumber(L, 1); \
@@ -34,8 +39,8 @@
     return 1; \
   }
 
-// func(column[default 1] of a matrix) -> value 
-#define GSL_FUNC_D_MI(name) \
+// name(M,col) -> D
+#define GSL_FUNC_D_Mcol(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
     ravi_matrix_t *v = api->check_ismatrix(L, 1); \
@@ -46,8 +51,8 @@
     return 1; \
   }
 
-// func(column[default 1] of a matrix, [m]) -> value 
-#define GSL_FUNC_D_MI_m(name, altname) \
+// name(M,col) or altname(M,col,D) -> D
+#define GSL_ALTFUNC_D_McolD(name, altname) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
     ravi_matrix_t *v = api->check_ismatrix(L, 1); \
@@ -64,15 +69,29 @@
     return 1; \
   }
 
-// func(column[default 1] of a matrix, [m]) -> value 
-#define GSL_FUNC_D_MIN(name) \
+// name(M, col, D) -> D 
+#define GSL_FUNC_D_McolD(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
     ravi_matrix_t *v = api->check_ismatrix(L, 1); \
-    double m = luaL_checknumber(L, 2); \
-    int col = (int) luaL_optinteger(L, 3, 1) - 1; \
-    luaL_argcheck(L, col >= 0 && col < v->n, 3, "invalid column"); \
+    int col = (int) luaL_checkinteger(L, 2) - 1; \
+    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    double m = luaL_checknumber(L, 3); \
     double y = name(&v->data[col*v->m], 1, v->m, m); \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
+
+// name(M, col, D, D) -> D 
+#define GSL_FUNC_D_McolDD(name) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    int col = (int) luaL_checkinteger(L, 2) - 1; \
+    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    double m = luaL_checknumber(L, 3); \
+    double sd = luaL_checknumber(L, 4); \
+    double y = name(&v->data[col*v->m], 1, v->m, m, sd); \
     lua_pushnumber(L, y); \
     return 1; \
   }
