@@ -112,5 +112,44 @@
     return 1; \
   }
 
+// name(M1, col1, M2, col2) -> D
+// or altname(M1, col1, M2, col2, D) -> D
+#define GSL_ALTFUNC_D_McolMcolD(name, altname) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t *v1 = api->check_ismatrix(L, 1); \
+    int col1 = (int) luaL_optinteger(L, 2, 1) - 1; \
+    luaL_argcheck(L, col1 >= 0 && col1 < v1->n, 2, "invalid column"); \
+    ravi_matrix_t *v2 = api->check_ismatrix(L, 3); \
+    int col2 = (int) luaL_optinteger(L, 4, 1) - 1; \
+    luaL_argcheck(L, col2 >= 0 && col2 < v2->n, 4, "invalid column"); \
+    luaL_argcheck(L, v1->m == v2->m, 3, "The inputs must have same number of rows"); \
+    double y; \
+    if (lua_gettop(L) >= 5 && lua_isnumber(L, 5)) { \
+      y = altname(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m, lua_tonumber(L, 5)); \
+    } \
+    else { \
+      y = name(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m); \
+    } \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
+
+// name(M1,col1, M2, col2, D) -> D
+#define GSL_FUNC_D_McolMcolD(name) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t *v1 = api->check_ismatrix(L, 1); \
+    int col1 = (int) luaL_optinteger(L, 2, 1) - 1; \
+    luaL_argcheck(L, col1 >= 0 && col1 < v1->n, 2, "invalid column"); \
+    ravi_matrix_t *v2 = api->check_ismatrix(L, 3); \
+    int col2 = (int) luaL_optinteger(L, 4, 1) - 1; \
+    luaL_argcheck(L, col2 >= 0 && col2 < v2->n, 4, "invalid column"); \
+    luaL_argcheck(L, v1->m == v2->m, 3, "The inputs must have same number of rows"); \
+    double m = luaL_checknumber(L, 5); \
+    double y = name(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m, m); \
+    lua_pushnumber(L, y); \
+    return 1; \
+  }
 
 #endif

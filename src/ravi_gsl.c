@@ -57,6 +57,15 @@ GSL_FUNC_D_McolDD(gsl_stats_kurtosis_m_sd)
 GSL_ALTFUNC_D_McolD(gsl_stats_lag1_autocorrelation, gsl_stats_lag1_autocorrelation_m)
 GSL_FUNC_D_McolMcol(gsl_stats_covariance)
 GSL_FUNC_D_McolMcol(gsl_stats_correlation)
+GSL_FUNC_D_McolMcol(gsl_stats_wmean)
+GSL_ALTFUNC_D_McolMcolD(gsl_stats_wvariance, gsl_stats_wvariance_m)
+GSL_ALTFUNC_D_McolMcolD(gsl_stats_wsd, gsl_stats_wsd_m)
+GSL_ALTFUNC_D_McolMcolD(gsl_stats_wtss, gsl_stats_wtss_m)
+GSL_ALTFUNC_D_McolMcolD(gsl_stats_wabsdev, gsl_stats_wabsdev_m)
+GSL_FUNC_D_McolMcol(gsl_stats_wskew)
+GSL_FUNC_D_McolMcol(gsl_stats_wkurtosis)
+GSL_FUNC_D_McolMcolD(gsl_stats_wvariance_with_fixed_mean)
+GSL_FUNC_D_McolMcolD(gsl_stats_wsd_with_fixed_mean)
 
 static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_mean", ravi_gsl_stats_mean},
@@ -73,6 +82,15 @@ static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_lag1_autocorrelation", ravi_gsl_stats_lag1_autocorrelation},
                                         {"stats_covariance", ravi_gsl_stats_covariance},
                                         {"stats_correlation", ravi_gsl_stats_correlation},
+                                        {"stats_wmean", ravi_gsl_stats_wmean},
+                                        {"stats_wvariance", ravi_gsl_stats_wvariance},
+                                        {"stats_wsd", ravi_gsl_stats_wsd},
+                                        {"stats_wvariance_with_fixed_mean", ravi_gsl_stats_wvariance_with_fixed_mean},
+                                        {"stats_wsd_with_fixed_mean", ravi_gsl_stats_wsd_with_fixed_mean},
+                                        {"stats_wtss", ravi_gsl_stats_wtss},
+                                        {"stats_wabsdev", ravi_gsl_stats_wabsdev},
+                                        {"stats_wskew", ravi_gsl_stats_wskew},
+                                        {"stats_wkurtosis", ravi_gsl_stats_wkurtosis},
                                         {NULL, NULL}};
 
 int luaopen_ravigsl(lua_State *L) {
