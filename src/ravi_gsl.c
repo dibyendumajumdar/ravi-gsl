@@ -22,7 +22,6 @@
 ******************************************************************************/
 
 #include <ravi_gsl.h>
-#include <ravi_lua_utils.h>
 #include <ravi_matrix.h>
 #include <ravi_matrixlib.h>
 
@@ -36,6 +35,8 @@
 
 #include <gsl/gsl_sf_bessel.h>
 #include <gsl/gsl_statistics_double.h>
+#include <gsl/gsl_fit.h>
+#include <gsl/gsl_errno.h>
 
 // M - Matrix
 // D - Double
@@ -66,6 +67,7 @@ GSL_FUNC_D_McolMcol(gsl_stats_wskew)
 GSL_FUNC_D_McolMcol(gsl_stats_wkurtosis)
 GSL_FUNC_D_McolMcolD(gsl_stats_wvariance_with_fixed_mean)
 GSL_FUNC_D_McolMcolD(gsl_stats_wsd_with_fixed_mean)
+GSL_FUNC_6D_McolMcol(gsl_fit_linear)
 
 static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_mean", ravi_gsl_stats_mean},
@@ -91,7 +93,33 @@ static const struct luaL_Reg mylib[] = {{"sf_bessel_J0", ravi_gsl_sf_bessel_J0},
                                         {"stats_wabsdev", ravi_gsl_stats_wabsdev},
                                         {"stats_wskew", ravi_gsl_stats_wskew},
                                         {"stats_wkurtosis", ravi_gsl_stats_wkurtosis},
+										{"fit_linear", ravi_gsl_fit_linear},
                                         {NULL, NULL}};
+
+// adds to an existing table
+// table must be on stop of the stack
+static void raviU_add_to_library(lua_State* L, const struct luaL_Reg* regs) {
+	int i = 0;
+	for (; regs[i].name != NULL; i++) {
+		lua_pushcclosure(L, regs[i].func, 0);
+		lua_setfield(L, -2, regs[i].name);
+	}
+}
+
+// creates a table of functions which is a library in Lua
+// terms. We use this as a portable way across 5.1 and 5.2 which
+// follows the latest conventions - i.e. avoid polluting global
+// namespace
+static void raviU_create_library(lua_State* L, const struct luaL_Reg* regs) {
+	int count = 0;
+	int i = 0;
+	for (; regs[i].name != NULL; i++) {
+		count++;
+	}
+	lua_createtable(L, 0, count);
+	raviU_add_to_library(L, regs);
+	// leave table on the stack
+}
 
 int luaopen_ravigsl(lua_State *L) {
   fprintf(stderr, "Initializing RaviGSL\n");

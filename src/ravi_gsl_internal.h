@@ -43,10 +43,10 @@
 #define GSL_FUNC_D_Mcol(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v = api->check_ismatrix(L, 1); \
     int col = (int) luaL_optinteger(L, 2, 1) - 1; \
-    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
-    double y = name(&v->data[col*v->m], 1, v->m); \
+    luaL_argcheck(L, col >= 0 && col < v.n, 2, "invalid column"); \
+    double y = name(&v.data[col*v.m], 1, v.m); \
     lua_pushnumber(L, y); \
     return 1; \
   }
@@ -55,15 +55,15 @@
 #define GSL_ALTFUNC_D_McolD(name, altname) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v = api->check_ismatrix(L, 1); \
     int col = (int) luaL_optinteger(L, 2, 1) - 1; \
-    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    luaL_argcheck(L, col >= 0 && col < v.n, 2, "invalid column"); \
     double y; \
     if (lua_gettop(L) >= 3 && lua_isnumber(L, 3)) { \
-      y = altname(&v->data[col*v->m], 1, v->m, lua_tonumber(L,3)); \
+      y = altname(&v.data[col*v.m], 1, v.m, lua_tonumber(L,3)); \
     } \
     else { \
-      y = name(&v->data[col*v->m], 1, v->m); \
+      y = name(&v.data[col*v.m], 1, v.m); \
     } \
     lua_pushnumber(L, y); \
     return 1; \
@@ -73,11 +73,11 @@
 #define GSL_FUNC_D_McolD(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v = api->check_ismatrix(L, 1); \
     int col = (int) luaL_checkinteger(L, 2) - 1; \
-    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    luaL_argcheck(L, col >= 0 && col < v.n, 2, "invalid column"); \
     double m = luaL_checknumber(L, 3); \
-    double y = name(&v->data[col*v->m], 1, v->m, m); \
+    double y = name(&v.data[col*v.m], 1, v.m, m); \
     lua_pushnumber(L, y); \
     return 1; \
   }
@@ -86,12 +86,12 @@
 #define GSL_FUNC_D_McolDD(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v = api->check_ismatrix(L, 1); \
     int col = (int) luaL_checkinteger(L, 2) - 1; \
-    luaL_argcheck(L, col >= 0 && col < v->n, 2, "invalid column"); \
+    luaL_argcheck(L, col >= 0 && col < v.n, 2, "invalid column"); \
     double m = luaL_checknumber(L, 3); \
     double sd = luaL_checknumber(L, 4); \
-    double y = name(&v->data[col*v->m], 1, v->m, m, sd); \
+    double y = name(&v.data[col*v.m], 1, v.m, m, sd); \
     lua_pushnumber(L, y); \
     return 1; \
   }
@@ -100,14 +100,14 @@
 #define GSL_FUNC_D_McolMcol(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v1 = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v1 = api->check_ismatrix(L, 1); \
     int col1 = (int) luaL_optinteger(L, 2, 1) - 1; \
-    luaL_argcheck(L, col1 >= 0 && col1 < v1->n, 2, "invalid column"); \
-    ravi_matrix_t *v2 = api->check_ismatrix(L, 3); \
+    luaL_argcheck(L, col1 >= 0 && col1 < v1.n, 2, "invalid column"); \
+    ravi_matrix_t v2 = api->check_ismatrix(L, 3); \
     int col2 = (int) luaL_optinteger(L, 4, 1) - 1; \
-    luaL_argcheck(L, col2 >= 0 && col2 < v2->n, 4, "invalid column"); \
-    luaL_argcheck(L, v1->m == v2->m, 3, "The inputs must have same number of rows"); \
-    double y = name(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m); \
+    luaL_argcheck(L, col2 >= 0 && col2 < v2.n, 4, "invalid column"); \
+    luaL_argcheck(L, v1.m == v2.m, 3, "The inputs must have same number of rows"); \
+    double y = name(&v1.data[col1*v1.m], 1, &v2.data[col2*v2.m], 1, v1.m); \
     lua_pushnumber(L, y); \
     return 1; \
   }
@@ -117,39 +117,66 @@
 #define GSL_ALTFUNC_D_McolMcolD(name, altname) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v1 = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v1 = api->check_ismatrix(L, 1); \
     int col1 = (int) luaL_optinteger(L, 2, 1) - 1; \
-    luaL_argcheck(L, col1 >= 0 && col1 < v1->n, 2, "invalid column"); \
-    ravi_matrix_t *v2 = api->check_ismatrix(L, 3); \
+    luaL_argcheck(L, col1 >= 0 && col1 < v1.n, 2, "invalid column"); \
+    ravi_matrix_t v2 = api->check_ismatrix(L, 3); \
     int col2 = (int) luaL_optinteger(L, 4, 1) - 1; \
-    luaL_argcheck(L, col2 >= 0 && col2 < v2->n, 4, "invalid column"); \
-    luaL_argcheck(L, v1->m == v2->m, 3, "The inputs must have same number of rows"); \
+    luaL_argcheck(L, col2 >= 0 && col2 < v2.n, 4, "invalid column"); \
+    luaL_argcheck(L, v1.m == v2.m, 3, "The inputs must have same number of rows"); \
     double y; \
     if (lua_gettop(L) >= 5 && lua_isnumber(L, 5)) { \
-      y = altname(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m, lua_tonumber(L, 5)); \
+      y = altname(&v1.data[col1*v1.m], 1, &v2.data[col2*v2.m], 1, v1.m, lua_tonumber(L, 5)); \
     } \
     else { \
-      y = name(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m); \
+      y = name(&v1.data[col1*v1.m], 1, &v2.data[col2*v2.m], 1, v1.m); \
     } \
     lua_pushnumber(L, y); \
     return 1; \
   }
 
-// name(M1,col1, M2, col2, D) -> D
+// name(M1, col1, M2, col2, D) -> D
 #define GSL_FUNC_D_McolMcolD(name) \
   static int ravi_##name(lua_State *L) { \
     const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
-    ravi_matrix_t *v1 = api->check_ismatrix(L, 1); \
+    ravi_matrix_t v1 = api->check_ismatrix(L, 1); \
     int col1 = (int) luaL_optinteger(L, 2, 1) - 1; \
-    luaL_argcheck(L, col1 >= 0 && col1 < v1->n, 2, "invalid column"); \
-    ravi_matrix_t *v2 = api->check_ismatrix(L, 3); \
+    luaL_argcheck(L, col1 >= 0 && col1 < v1.n, 2, "invalid column"); \
+    ravi_matrix_t v2 = api->check_ismatrix(L, 3); \
     int col2 = (int) luaL_optinteger(L, 4, 1) - 1; \
-    luaL_argcheck(L, col2 >= 0 && col2 < v2->n, 4, "invalid column"); \
-    luaL_argcheck(L, v1->m == v2->m, 3, "The inputs must have same number of rows"); \
+    luaL_argcheck(L, col2 >= 0 && col2 < v2.n, 4, "invalid column"); \
+    luaL_argcheck(L, v1.m == v2.m, 3, "The inputs must have same number of rows"); \
     double m = luaL_checknumber(L, 5); \
-    double y = name(&v1->data[col1*v1->m], 1, &v2->data[col2*v2->m], 1, v1->m, m); \
+    double y = name(&v1.data[col1*v1.m], 1, &v2.data[col2*v2.m], 1, v1.m, m); \
     lua_pushnumber(L, y); \
     return 1; \
   }
+
+#define GSL_FUNC_6D_McolMcol(name) \
+  static int ravi_##name(lua_State *L) { \
+    const ravi_matrix_lua_api_t *api = ravi_matrix_get_api(true); \
+    ravi_matrix_t v1 = api->check_ismatrix(L, 1); \
+    int col1 = (int) luaL_optinteger(L, 2, 1) - 1; \
+    luaL_argcheck(L, col1 >= 0 && col1 < v1.n, 2, "invalid column"); \
+    ravi_matrix_t v2 = api->check_ismatrix(L, 3); \
+    int col2 = (int) luaL_optinteger(L, 4, 1) - 1; \
+    luaL_argcheck(L, col2 >= 0 && col2 < v2.n, 4, "invalid column"); \
+    luaL_argcheck(L, v1.m == v2.m, 3, "The inputs must have same number of rows"); \
+    double ret1 = 0, ret2 = 0, ret3 = 0, ret4 = 0, ret5 = 0, ret6 = 0; \
+    int rc = name(&v1.data[col1*v1.m], 1, &v2.data[col2*v2.m], 1, v1.m, &ret1, &ret2, &ret3, &ret4, &ret5, &ret6); \
+    if (rc == GSL_SUCCESS) { \
+      lua_pushnumber(L, ret1); \
+      lua_pushnumber(L, ret2); \
+      lua_pushnumber(L, ret3); \
+      lua_pushnumber(L, ret4); \
+      lua_pushnumber(L, ret5); \
+      lua_pushnumber(L, ret6); \
+	} \
+	else { \
+      return luaL_error(L, "Failed to carry out request\n"); \
+	} \
+    return 6; \
+  }
+
 
 #endif

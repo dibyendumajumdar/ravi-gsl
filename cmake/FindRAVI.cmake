@@ -5,7 +5,7 @@ find_path(LUA_INCLUDE_DIR lua.h
 )
 
 find_library(LUA_LIBRARY
-  NAMES ravi libravi
+  NAMES ravi libravi libravinojit ravinojit
   PATHS
   c:/ravi/lib
   ~/ravi/lib
